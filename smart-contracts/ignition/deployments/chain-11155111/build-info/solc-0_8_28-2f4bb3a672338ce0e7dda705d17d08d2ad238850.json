@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-2f4bb3a672338ce0e7dda705d17d08d2ad238850",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/CampaignFactory.sol": "project/contracts/CampaignFactory.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/Campaign.sol": {
+        "content": "// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.0;\n\n\ncontract Campaign {\n    struct Request {\n        string description;\n        uint value;\n        address recipient;\n        bool completed;\n        uint votersCount;\n    }\n    address public manger;\n    uint public minumumContribution;\n    mapping (address => bool) public approvers;\n    uint public  approversCount;\n    Request[] public requests;\n    mapping(uint256 => mapping(address => bool)) public voters;\n\n\n\n    constructor(address sender, uint minimum)  {\n        manger = sender;\n        minumumContribution = minimum;\n    }\n\n    modifier onlyManger {\n        require(msg.sender == manger, \"Only Manger can do that\");\n        _;\n    }\n    // create modifer for onlyApprovers\n         modifier onlyApprover {\n        require(approvers[msg.sender], \"Only Approvers\");\n        _;\n    }\n\n    // create modifter for votersApproved\n \n\n    function contribute() public  payable  {\n        require(msg.value > minumumContribution);\n        approvers[msg.sender] = true;\n        approversCount++;\n    }\n\n    function createRequest (string memory description, uint value, address recipient) public onlyManger {\n       requests.push(Request({\n        description: description,\n        value: value,\n        recipient: recipient,\n        completed: false,\n        votersCount: 0\n       }));\n    }\n\n    // function to approve a request onlyApprovers\n     function approveRequest(uint256 index) public onlyApprover {\n        Request storage request = requests[index];\n\n        require(!request.completed, \"Request completed\");\n        require(!voters[index][msg.sender], \"Already approved\");\n\n        voters[index][msg.sender] = true;\n        request.votersCount++;\n    }\n\n    // function to finlaize request votersApproved\n    function finalizeRequest(uint256 index) public onlyManger {\n        Request storage request = requests[index];\n        \n        require(!request.completed, \"Already Finalized\");\n\n        require(request.votersCount >= (approversCount / 2), \"Not enugh voters\");\n        \n        (bool sent, ) = payable(request.recipient).call{value: request.value}(\"\");\n        require(sent, \"Failed to send Ether\");\n\n        request.completed = true;\n    }\n\n    function getCampaignSummary() public view  returns (uint256,uint256,uint256,uint256,address) {\n        return (minumumContribution, address(this).balance, requests.length, approversCount, manger);\n    }\n\n    function getRequestsCount() public view returns (uint256) {\n        return requests.length;\n    }\n  \n}"
+      },
+      "project/contracts/CampaignFactory.sol": {
+        "content": "// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.0;\n\nimport \"./Campaign.sol\";\n\ncontract CampaignFactory {\n    struct CampaignInfo {\n        string name;\n        string description;\n        uint256 minimum;\n        address campaignAddress;\n    }\n\n    CampaignInfo[] public deployedCampaigns;\n\n    function createCampaign(string memory name, string memory description, uint256 minimum) public {\n        Campaign newCampaign = new Campaign(msg.sender, minimum);\n        deployedCampaigns.push(\n            CampaignInfo({\n                name: name,\n                description: description,\n                minimum: minimum,\n                campaignAddress: address(newCampaign)\n            })\n        );\n    }\n\n    function getDeployedCampaigns() public view returns (CampaignInfo[] memory) {\n        return deployedCampaigns;\n    }\n}\n"
+      }
+    }
+  }
+}
