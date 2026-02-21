@@ -13,9 +13,8 @@ export const getVoters = async (
   campaignAddress: string,
   requestIndex: bigint,
   address: string,
-  signerOrProvider: Signer | Provider
 ): Promise<boolean> => {
-  const campaignContract = getCampaignContract(campaignAddress, signerOrProvider);
+  const campaignContract = await getCampaignContract(campaignAddress);
   return await campaignContract.voters(requestIndex, address);
 };
 

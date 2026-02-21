@@ -12,9 +12,8 @@ import { Request } from '../types';
 export const getRequest = async (
   campaignAddress: string,
   requestIndex: bigint,
-  signerOrProvider: Signer | Provider
 ): Promise<Request> => {
-  const campaignContract = getCampaignContract(campaignAddress, signerOrProvider);
+  const campaignContract = await getCampaignContract(campaignAddress);
   
   const [description, value, recipient, completed, votersCount] = 
     await campaignContract.requests(requestIndex);

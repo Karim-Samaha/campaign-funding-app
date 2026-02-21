@@ -9,9 +9,8 @@ import { getCampaignContract } from '../utils/getContract';
  */
 export const getRequestsCount = async (
   campaignAddress: string,
-  signerOrProvider: Signer | Provider
 ): Promise<bigint> => {
-  const campaignContract = getCampaignContract(campaignAddress, signerOrProvider);
+  const campaignContract = await getCampaignContract(campaignAddress);
   return await campaignContract.getRequestsCount();
 };
 

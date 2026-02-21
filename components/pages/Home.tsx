@@ -1,12 +1,10 @@
 'use client'
-import React, { useState, useEffect } from 'react'
 import DisplayCampaigns from '../DisplayCampaigns';
 import { useCampaigns } from '@/hooks/useCampaigns';
 
-// import { useStateContext } from '../context'
 
 const Home = () => {
-  const { campaigns, loading, error } = useCampaigns();
+  const { campaigns, loading } = useCampaigns();
 
   return (
     <DisplayCampaigns

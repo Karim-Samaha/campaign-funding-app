@@ -34,7 +34,9 @@ const CreateCampaignView = () => {
         // try {
         const contractAddress = await connectMetamask();
         console.log(+form.minimum, contractAddress);
-        const response = await createCampaign({ name: form.name, description: form.description, minimum: BigInt(form.minimum) }, contractAddress as unknown as Signer);
+        const response = await createCampaign(
+            { name: form.name, description: form.description, minimum: form.minimum },
+            contractAddress as unknown as Signer);
         router.push("/");
 
         // } catch (error) {

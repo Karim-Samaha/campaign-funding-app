@@ -15,9 +15,8 @@ export const createRequest = async (
   description: string,
   value: bigint,
   recipient: string,
-  signer: Signer
 ) => {
-  const campaignContract = getCampaignContract(campaignAddress, signer);
+  const campaignContract = await getCampaignContract(campaignAddress);
   
   const tx = await campaignContract.createRequest(description, value, recipient);
   return await tx.wait();

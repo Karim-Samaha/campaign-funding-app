@@ -1,6 +1,7 @@
 'use client';
 import FundCard from './FundCard';
 import { loader } from '@/assets';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const DisplayCampaigns = ({ title, isLoading, campaigns }: { title: string, isLoading: boolean, campaigns: any[] }) => {
@@ -16,7 +17,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }: { title: string, isLo
 
       <div className="flex flex-wrap mt-[20px] gap-[26px]">
         {isLoading && (
-          <img src={loader} alt="loader" className="w-[100px] h-[100px] object-contain" />
+          <Image src={loader} alt="loader" className="w-[100px] h-[100px] object-contain" />
         )}
 
         {!isLoading && campaigns.length === 0 && (

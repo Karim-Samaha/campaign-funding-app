@@ -11,13 +11,12 @@ import { Request } from '../types';
  */
 export const getAllRequests = async (
   campaignAddress: string,
-  signerOrProvider: Signer | Provider
 ): Promise<Request[]> => {
-  const count = await getRequestsCount(campaignAddress, signerOrProvider);
+  const count = await getRequestsCount(campaignAddress);
   const requests: Request[] = [];
   
   for (let i = 0; i < Number(count); i++) {
-    const request = await getRequest(campaignAddress, BigInt(i), signerOrProvider);
+    const request = await getRequest(campaignAddress, BigInt(i));
     requests.push(request);
   }
   

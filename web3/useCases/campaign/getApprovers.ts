@@ -13,7 +13,7 @@ export const getApprovers = async (
   address: string,
   signerOrProvider: Signer | Provider
 ): Promise<boolean> => {
-  const campaignContract = getCampaignContract(campaignAddress, signerOrProvider);
+  const campaignContract = await getCampaignContract(campaignAddress);
   return await campaignContract.approvers(address);
 };
 

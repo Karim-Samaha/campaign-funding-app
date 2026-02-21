@@ -9,9 +9,8 @@ import { getCampaignContract } from '../utils/getContract';
  */
 export const getManager = async (
   campaignAddress: string,
-  signerOrProvider: Signer | Provider
 ): Promise<string> => {
-  const campaignContract = getCampaignContract(campaignAddress, signerOrProvider);
+  const campaignContract = await getCampaignContract(campaignAddress);
   return await campaignContract.manger();
 };
 

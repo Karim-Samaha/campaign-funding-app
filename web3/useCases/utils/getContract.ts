@@ -26,7 +26,6 @@ export const getSigner = async (): Promise<ethers.JsonRpcSigner | null> => {
 export const getFactoryContract = async (
 ): Promise<any> => {
   const signer = await getSigner();
-  console.log(signer);
   if (!signer) {
     throw new Error('No signer found. Please install MetaMask or another Web3 wallet.');
   }
@@ -41,19 +40,19 @@ export const getFactoryContract = async (
 /**
  * Get an instance of a Campaign contract
  */
-export const getCampaignContract = (
+export const getCampaignContract = async (
   campaignAddress: string,
-  signerOrProvider?: Signer | Provider
-): CampaignContractInstance => {
-  // If signerOrProvider is provided, use it; otherwise get signer
-  if (signerOrProvider) {
-    return new Contract(
-      campaignAddress,
-      CampaignContractABI,
-      signerOrProvider
-    ) as CampaignContractInstance;
+): Promise<CampaignContractInstance> => {
+  const signer = await getSigner();
+  if (!signer) {
+    throw new Error('No signer found. Please install MetaMask or another Web3 wallet.');
   }
-  
+  return new Contract(
+    campaignAddress,
+    CampaignContractABI,
+    signer
+  ) as CampaignContractInstance;
+
   // For backward compatibility, try to get signer
   // But this should be called with signerOrProvider in most cases
   throw new Error('signerOrProvider is required');

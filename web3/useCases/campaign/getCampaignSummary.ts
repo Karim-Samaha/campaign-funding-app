@@ -10,9 +10,8 @@ import { CampaignSummary } from '../types';
  */
 export const getCampaignSummary = async (
   campaignAddress: string,
-  signerOrProvider: Signer | Provider
 ): Promise<CampaignSummary> => {
-  const campaignContract = getCampaignContract(campaignAddress, signerOrProvider);
+  const campaignContract = await getCampaignContract(campaignAddress);
   
   const [minimumContribution, balance, requestsCount, approversCount, manager] = 
     await campaignContract.getCampaignSummary();

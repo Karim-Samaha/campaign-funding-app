@@ -12,9 +12,8 @@ import { getCampaignContract } from '../utils/getContract';
 export const finalizeRequest = async (
   campaignAddress: string,
   requestIndex: bigint,
-  signer: Signer
 ) => {
-  const campaignContract = getCampaignContract(campaignAddress, signer);
+  const campaignContract = await getCampaignContract(campaignAddress);
   
   const tx = await campaignContract.finalizeRequest(requestIndex);
   return await tx.wait();
